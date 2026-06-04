@@ -61,6 +61,7 @@ export const auth = betterAuth({
     nextCookies()
   ],
   advanced: {
+    trustHost: true,
     cookiePrefix: "aura",
     database: {
       generateId: "uuid"
