@@ -1,0 +1,71 @@
+{
+  "name": "medcheck-diagnostic-system",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Medcheck Diagnostic System student-edition AI-native wellness platform.",
+  "overrides": {
+    "kysely": "0.27.3"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && prisma db push --accept-data-loss && node scripts/clean-db.js && npx tsx scripts/init-auth.ts && next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@prisma/client": "^6.8.2",
+    "@radix-ui/react-slot": "^1.2.2",
+    "@sentry/nextjs": "^9.26.0",
+    "better-auth": "^1.6.0",
+    "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.6.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.12.2",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^0.511.0",
+    "mammoth": "^1.12.0",
+    "next": "^15.3.2",
+    "pdf-parse": "^2.4.5",
+    "peerjs": "^1.5.5",
+    "posthog-js": "^1.241.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "recharts": "^3.8.1",
+    "sonner": "^2.0.3",
+    "tailwind-merge": "^3.3.0",
+    "xlsx": "^0.18.5",
+    "zod": "^3.25.28"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "^1.52.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.15.21",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.27.0",
+    "eslint-config-next": "^15.3.2",
+    "jsdom": "^26.1.0",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
+    "prisma": "^6.8.2",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  }
+}

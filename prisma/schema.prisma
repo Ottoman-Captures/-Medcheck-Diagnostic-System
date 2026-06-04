@@ -1,0 +1,418 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  COACH
+  ADMIN
+}
+
+enum Gender {
+  FEMALE
+  MALE
+  NON_BINARY
+  PREFER_NOT_TO_SAY
+  OTHER
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHT
+  MODERATE
+  ACTIVE
+  ATHLETE
+}
+
+enum HealthGoalType {
+  WEIGHT_LOSS
+  MUSCLE_GAIN
+  BETTER_SLEEP
+  HYDRATION
+  STRESS_REDUCTION
+  MAINTENANCE
+  ENDURANCE
+}
+
+enum GoalCadence {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum GoalStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ARCHIVED
+}
+
+enum MetricSource {
+  MANUAL
+  MOBILE_TRACKER
+  IMPORT
+}
+
+enum MealPlanType {
+  DAILY
+  WEEKLY
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum AiMessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum ReminderType {
+  WATER
+  MEDICATION
+  EXERCISE
+  MEAL
+  SLEEP
+}
+
+enum ReminderCadence {
+  ONCE
+  DAILY
+  WEEKLY
+  CUSTOM
+}
+
+enum NotificationChannel {
+  BROWSER
+  EMAIL
+}
+
+enum NotificationStatus {
+  QUEUED
+  SENT
+  READ
+  FAILED
+}
+
+enum ActivityEventType {
+  STEPS_SYNCED
+  GOAL_UPDATED
+  MEAL_GENERATED
+  REMINDER_TRIGGERED
+  AI_MESSAGE_SENT
+  ONBOARDING_COMPLETED
+}
+
+enum AvoidanceCategory {
+  ALLERGY
+  RELIGIOUS
+  DISLIKED_FOOD
+  CUSTOM_INGREDIENT
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  role          Role     @default(USER)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sessions       Session[]
+  accounts       Account[]
+  profile        UserProfile?
+  healthMetrics  HealthMetric[]
+  goals          Goal[]
+  mealPlans      MealPlan[]
+  conversations  AiConversation[]
+  reminders      Reminder[]
+  notifications  Notification[]
+  activityLogs   ActivityLog[]
+  avoidanceItems AvoidanceItem[]
+  aiUsage        AiUsage[]
+
+  @@index([role])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(uuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Jwks {
+  id         String    @id @default(uuid())
+  publicKey  String
+  privateKey String
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime?
+
+  @@map("jwks")
+}
+
+model UserProfile {
+  id                  String        @id @default(uuid())
+  userId              String        @unique
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  age                 Int?
+  gender              Gender?
+  heightCm            Decimal?
+  weightKg            Decimal?
+  activityLevel       ActivityLevel @default(MODERATE)
+  dietaryPreferences  Json          @default("[]")
+  allergies           Json          @default("[]")
+  healthGoals         Json          @default("[]")
+  onboardingCompleted Boolean       @default(false)
+  planSummary         Json?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@map("user_profiles")
+}
+
+model HealthMetric {
+  id            String       @id @default(uuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  measuredAt    DateTime     @default(now())
+  steps         Int          @default(0)
+  waterMl       Int          @default(0)
+  sleepMinutes  Int          @default(0)
+  calories      Int          @default(0)
+  distanceKm    Decimal      @default(0)
+  activeMinutes Int          @default(0)
+  moodScore     Int?
+  source        MetricSource @default(MANUAL)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([userId, measuredAt])
+  @@map("health_metrics")
+}
+
+model Goal {
+  id           String         @id @default(uuid())
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type         HealthGoalType
+  title        String
+  targetValue  Decimal
+  currentValue Decimal        @default(0)
+  unit         String
+  cadence      GoalCadence    @default(DAILY)
+  status       GoalStatus     @default(ACTIVE)
+  startsAt     DateTime       @default(now())
+  dueAt        DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([userId, status])
+  @@map("goals")
+}
+
+model MealPlan {
+  id                   String       @id @default(uuid())
+  userId               String
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type                 MealPlanType
+  diet                 String
+  title                String
+  targetCalories       Int?
+  nutritionalBreakdown Json
+  restrictions         Json         @default("[]")
+  startsOn             DateTime
+  endsOn               DateTime?
+  meals                Meal[]
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  @@index([userId, startsOn])
+  @@map("meal_plans")
+}
+
+model Meal {
+  id        String   @id @default(uuid())
+  planId    String
+  plan      MealPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  type      MealType
+  title     String
+  calories  Int
+  proteinG  Decimal  @default(0)
+  carbsG    Decimal  @default(0)
+  fatG      Decimal  @default(0)
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([planId, type])
+  @@map("meals")
+}
+
+model AiConversation {
+  id        String      @id @default(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  messages  AiMessage[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([userId, updatedAt])
+  @@map("ai_conversations")
+}
+
+model AiMessage {
+  id             String         @id @default(uuid())
+  conversationId String
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           AiMessageRole
+  content        String
+  safetyFlags    Json           @default("[]")
+  createdAt      DateTime       @default(now())
+
+  @@index([conversationId, createdAt])
+  @@map("ai_messages")
+}
+
+model AiUsage {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feature      String
+  model        String
+  inputTokens  Int      @default(0)
+  outputTokens Int      @default(0)
+  latencyMs    Int?
+  createdAt    DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("ai_usage")
+}
+
+model Reminder {
+  id           String          @id @default(uuid())
+  userId       String
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type         ReminderType
+  title        String
+  description  String?
+  cadence      ReminderCadence @default(DAILY)
+  scheduledFor DateTime
+  timezone     String          @default("UTC")
+  isActive     Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([userId, isActive, scheduledFor])
+  @@map("reminders")
+}
+
+model Notification {
+  id        String              @id @default(uuid())
+  userId    String
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel   NotificationChannel
+  status    NotificationStatus  @default(QUEUED)
+  title     String
+  body      String
+  metadata  Json?
+  sentAt    DateTime?
+  readAt    DateTime?
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@index([userId, status, createdAt])
+  @@map("notifications")
+}
+
+model ActivityLog {
+  id        String            @id @default(uuid())
+  userId    String
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      ActivityEventType
+  metadata  Json?
+  createdAt DateTime          @default(now())
+
+  @@index([userId, createdAt])
+  @@map("activity_logs")
+}
+
+model AvoidanceItem {
+  id        String            @id @default(uuid())
+  userId    String
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category  AvoidanceCategory
+  label     String
+  notes     String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@unique([userId, category, label])
+  @@index([userId, category])
+  @@map("avoidance_items")
+}
+
+model SystemHealthCheck {
+  id        String   @id @default(uuid())
+  service   String
+  status    String
+  latencyMs Int?
+  details   Json?
+  createdAt DateTime @default(now())
+
+  @@index([service, createdAt])
+  @@map("system_health_checks")
+}

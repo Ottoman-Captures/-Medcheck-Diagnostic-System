@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --background: #0b0f19;
+  --surface: #111827;
+  --text: #f9fafb;
+  --muted: #9ca3af;
+  --accent: #4f46e5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background:
+    linear-gradient(180deg, rgba(17, 24, 39, 0.78), rgba(11, 15, 25, 1) 42%),
+    #0b0f19;
+  color: var(--text);
+  font-family: Inter, "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  text-rendering: geometricPrecision;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.32);
+}
+
+.aura-focus {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+}
+
+.glass-surface {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(18px);
+}

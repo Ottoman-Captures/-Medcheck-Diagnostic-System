@@ -1,0 +1,20 @@
+.env
+.env*.local
+.env.vercel
+.env.vercel.prod
+.next
+node_modules
+coverage
+playwright-report
+test-results
+dist
+*.tsbuildinfo
+.vercel
+test_report.png
+
+# Databases and SQLite artifacts
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+**/dev.db
