@@ -59,6 +59,12 @@ if (
     },
     log: ["error"]
   });
+
+  // Clear the Jwks table at container startup to prevent any stale/incompatible keys 
+  // from crashing the jose JWK parser during Better Auth initialization on Vercel.
+  prismaClient.jwks.deleteMany()
+    .then(() => console.log("Startup Jwks cleanup successful."))
+    .catch((err) => console.error("Failed to clear Jwks table at startup:", err));
 } else {
   prismaClient =
     globalForPrisma.prisma ??
