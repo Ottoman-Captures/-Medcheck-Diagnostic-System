@@ -30,7 +30,9 @@ if (
     console.error("Listing directory error:", e);
   }
 
-  const globalObj = globalThis as any;
+  const globalObj = globalThis as typeof globalThis & {
+    hasCopiedDb?: boolean;
+  };
   if (!globalObj.hasCopiedDb) {
     try {
       console.log(`Copying database from ${srcPath} to ${destPath}...`);
