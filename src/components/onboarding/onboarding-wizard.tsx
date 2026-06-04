@@ -116,7 +116,7 @@ export function OnboardingWizard() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <Badge tone="emerald">Step {step + 1} of 5</Badge>
-          <h1 className="mt-3 font-display text-3xl font-bold text-white">Personalize Aura</h1>
+          <h1 className="mt-3 font-display text-3xl font-bold text-white">Personalize Medcheck</h1>
         </div>
         <div className="w-full max-w-xs">
           <div className="mb-2 flex justify-between text-xs text-muted">

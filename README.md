@@ -1,61 +1,84 @@
-# Aura Health
+# 🏥 Medcheck Diagnostic System
 
-Aura Health is a production-minded, student-friendly AI wellness platform built with Next.js 15, React 19, Prisma, Neon PostgreSQL, Better Auth, Gemini, Recharts, PostHog, Sentry, Cloudinary, and PeerJS.
+Medcheck Diagnostic System is a production-grade, AI-native diagnostic and wellness companion designed to deliver intelligent wellness tracking, nutrition advice, health analysis, and real-time support. Built with a modern, high-performance tech stack, it provides a premium dark-mode SaaS interface tailored for wellness coaching and interactive analytics.
 
-The implementation is intentionally zero-cost first: all external services have free tiers, and missing optional keys fall back gracefully during local development.
+---
 
-## What Is Included
+## 🚀 Key Features
 
-- Dark-mode premium SaaS interface for dashboard, onboarding, AI coach, meal planning, reminders, analytics, and admin.
-- Better Auth route integration with Prisma-backed users, sessions, accounts, verification, and JWT/JWKS support through `/api/auth/token` and `/api/auth/jwks`.
-- Production-oriented Prisma schema using UUID primary keys for users, profiles, health metrics, goals, meals, AI conversations, reminders, notifications, activity logs, and avoidance lists.
-- Gemini AI coach service with medical-safety boundaries, structured validation, and development fallback.
-- API route handlers for `/api/auth/*`, `/api/users/me`, `/api/health`, `/api/meals`, `/api/reminders`, `/api/ai/chat`, `/api/analytics`, `/api/admin`, `/api/notifications`, and `/api/activity`.
-- Browser notification and PeerJS-ready mobile tracker UI.
-- Vitest unit tests, Playwright smoke test, and GitHub Actions CI.
+*   **Intelligent Onboarding**: Tailored health profile generation based on user input, goals, and conditions.
+*   **Gemini AI Coach**: Real-time AI consultation featuring strict medical-safety boundaries, structured parsing, and conversational memory.
+*   **Analytics Dashboard**: Premium interactive data visualization for steps, hydration, sleep, active calories, and weekly wellness trends.
+*   **Meal & Goal Planner**: Real-time dietary suggestion engine, avoidance lists tracking, and goal-ring indicators.
+*   **Secure Authentication**: Fully integrated password/session management powered by Better Auth, including custom JWT token distribution and JWKS endpoint verification.
+*   **Real-time Reminders & Logs**: Push notifications, active reminders board, activity logging, and live synchronization.
+*   **Cross-Device Synchronization**: Integrated mobile tracker UI leveraging PeerJS for wireless diagnostics.
 
-## Local Setup
+---
 
-```bash
-npm install
-cp .env.example .env
-npm run db:push
-npm run dev
+## 🛠️ Architecture & Technology Stack
+
+The application is built with a zero-cost-first philosophy—utilizing free tiers of industry-standard tools while falling back gracefully when keys are omitted locally.
+
+*   **Framework**: [Next.js 15](https://nextjs.org/) (App Router, Server Actions) & [React 19](https://react.dev/)
+*   **Database**: [Prisma ORM](https://www.prisma.io/) with SQLite for development and Postgres compatibility for production
+*   **Security & Auth**: [Better Auth](https://www.better-auth.com/) with JWKS key rotation
+*   **Artificial Intelligence**: [Gemini Pro API](https://ai.google.dev/) via the Google Gen AI SDK
+*   **UI & Styling**: Vanilla CSS, [TailwindCSS](https://tailwindcss.com/), [Shadcn UI](https://ui.shadcn.com/) components, and [Lucide Icons](https://lucide.dev/)
+*   **Analytics**: [Recharts](https://recharts.org/) and [PostHog](https://posthog.com/) integration
+*   **Monitoring**: [Sentry](https://sentry.io/) error tracking
+*   **Testing**: [Vitest](https://vitest.dev/) for unit tests and [Playwright](https://playwright.dev/) for E2E validation
+
+---
+
+## 📁 Repository Structure
+
+```text
+├── .github/workflows/   # CI/CD pipelines
+├── prisma/              # Prisma schema definition
+├── scripts/             # Database initialization and key rotation scripts
+├── src/
+│   ├── app/             # Page layouts, actions, and API route handlers
+│   ├── components/      # UI, dashboard, onboarding, and coach modules
+│   └── lib/             # API services, AI configuration, security, and utils
+└── tests/               # E2E test suites
 ```
 
-Open `http://localhost:3000`.
+---
 
-## Free Deployment Stack
+## ⚙️ Local Setup
 
-- App: Vercel Hobby
-- Database: Neon Free Postgres
-- AI: Gemini API free tier
-- Images: Cloudinary free tier
-- Analytics: PostHog free tier
-- Monitoring: Sentry developer/free tier
-- Realtime mobile sync: PeerJS public broker for prototype, self-host later if needed
+1.  **Clone and install dependencies**:
+    ```bash
+    npm install
+    ```
 
-## Environment Variables
+2.  **Environment Configuration**:
+    Create a `.env` file by copying the example file:
+    ```bash
+    cp .env.example .env
+    ```
 
-Use `.env.example` as the source of truth. Required for a real deployment:
+3.  **Database Initialization**:
+    Run the migrations/push command to set up your local database:
+    ```bash
+    npx prisma db push
+    ```
 
-- `DATABASE_URL`
-- `BETTER_AUTH_SECRET`
-- `BETTER_AUTH_URL`
-- `NEXT_PUBLIC_APP_URL`
-- `GEMINI_API_KEY`
+4.  **Run Development Server**:
+    Start the Next.js development server:
+    ```bash
+    npm run dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000) to view the application in the browser.
 
-Optional but recommended:
+---
 
-- `NEXT_PUBLIC_POSTHOG_KEY`
-- `NEXT_PUBLIC_SENTRY_DSN`
-- `CLOUDINARY_*`
-- `SMTP_*`
+## 🔒 Security & Safety Disclaimers
 
-## Safety Disclaimer
+Medcheck is built with robust safety systems for AI wellness applications:
 
-Aura Health always displays and injects the disclaimer:
-
-> AI-generated information is for educational purposes only and is not medical advice.
-
-The AI coach is designed to avoid diagnosis, prescriptions, medication changes, and emergency triage. Users are directed to qualified clinicians for medical concerns.
+*   **Security Defaults**: Production builds generate clean JWKS keys dynamically on build time to ensure secure token verification. Environment secrets are strictly kept out of version control.
+*   **Clinical Safety Boundaries**: The AI Coach operates under a system prompt designed to prevent medical diagnoses, prescriptions, medication adjustments, and emergency triage.
+*   **Persistent Medical Disclaimer**: The application persistently displays and includes this notice on all AI interfaces:
+    > "AI-generated information is for educational purposes only and is not medical advice. Always consult a qualified physician for clinical concerns."

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export function MobileTracker() {
-  const [peerId, setPeerId] = useState("AURA-DEMO");
+  const [peerId, setPeerId] = useState("MEDCHECK-DEMO");
   const [status, setStatus] = useState("Ready");
 
   async function startPeer() {
