@@ -30,25 +30,23 @@ if (
     console.error("Listing directory error:", e);
   }
 
-  try {
-    const shouldCopy =
-      !fs.existsSync(destPath) ||
-      (fs.existsSync(srcPath) && fs.statSync(srcPath).mtimeMs > fs.statSync(destPath).mtimeMs);
-
-    if (shouldCopy) {
+  const globalObj = globalThis as any;
+  if (!globalObj.hasCopiedDb) {
+    try {
       console.log(`Copying database from ${srcPath} to ${destPath}...`);
       if (fs.existsSync(srcPath)) {
         fs.copyFileSync(srcPath, destPath);
         fs.chmodSync(destPath, 0o666);
         console.log("Database copied successfully to /tmp!");
+        globalObj.hasCopiedDb = true;
       } else {
         console.warn(`Source database at ${srcPath} not found!`);
       }
-    } else {
-      console.log("Database already exists in /tmp and is up-to-date.");
+    } catch (error) {
+      console.error("Failed to copy database to /tmp:", error);
     }
-  } catch (error) {
-    console.error("Failed to copy database to /tmp:", error);
+  } else {
+    console.log("Database already copied in this container instance.");
   }
 
   prismaClient = new PrismaClient({
