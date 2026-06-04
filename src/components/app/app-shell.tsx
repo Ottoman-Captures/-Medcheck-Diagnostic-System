@@ -42,7 +42,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/dashboard" className="aura-focus flex items-center gap-3 rounded-lg">
             <div className="grid h-9 w-9 place-items-center rounded-lg bg-emerald-400 text-slate-950">
-              <span className="font-display text-lg font-black">A</span>
+              <span className="font-display text-lg font-black">M</span>
             </div>
             <div>
               <p className="font-display text-sm font-bold tracking-wide text-white">Medcheck Diagnostic System</p>

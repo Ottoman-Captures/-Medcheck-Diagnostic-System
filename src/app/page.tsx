@@ -17,7 +17,7 @@ export default function HomePage() {
         <header className="flex items-center justify-between gap-4">
           <Link href="/" className="aura-focus flex items-center gap-3 rounded-lg">
             <div className="grid h-10 w-10 place-items-center rounded-lg bg-emerald-400 text-slate-950">
-              <span className="font-display text-xl font-black">A</span>
+              <span className="font-display text-xl font-black">M</span>
             </div>
             <div>
               <p className="font-display text-sm font-bold tracking-wide text-white">Medcheck Diagnostic System</p>
