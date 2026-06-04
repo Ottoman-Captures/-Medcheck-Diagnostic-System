@@ -203,6 +203,7 @@ export function CoachPanel() {
                   {item.attachment.fileType.startsWith("image/") ? (
                     <div className="grid gap-1">
                       <div className="text-slate-300 font-medium">📎 {item.attachment.filename}</div>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={item.attachment.fileData}
                         alt="attachment"

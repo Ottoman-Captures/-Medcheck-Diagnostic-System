@@ -29,7 +29,7 @@ export function assertSameOrigin(request: Request) {
     if (expectedUrl.host && env.appUrl !== "http://localhost:3000") {
       expectedHost = expectedUrl.host;
     }
-  } catch (e) {
+  } catch {
     // Ignore invalid URL
   }
 

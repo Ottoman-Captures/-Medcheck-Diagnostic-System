@@ -5,7 +5,11 @@ async function main() {
   try {
     const res = await auth.handler(
       new Request("http://localhost:3000/api/auth/jwks", {
-        method: "GET"
+        method: "GET",
+        headers: {
+          "x-real-ip": "127.0.0.1",
+          "x-forwarded-for": "127.0.0.1"
+        }
       })
     );
     console.log("JWKS response status:", res.status);
