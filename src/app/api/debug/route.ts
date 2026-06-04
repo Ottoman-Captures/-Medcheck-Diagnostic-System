@@ -43,6 +43,7 @@ export async function GET() {
         VERCEL: process.env.VERCEL,
         VERCEL_REGION: process.env.VERCEL_REGION,
         NODE_ENV: process.env.NODE_ENV,
+        DATABASE_URL: process.env.DATABASE_URL,
       }
     });
   } catch (error) {
