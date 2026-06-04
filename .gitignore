@@ -1,7 +1,5 @@
 .env
-.env*.local
-.env.vercel
-.env.vercel.prod
+.env*
 .next
 node_modules
 coverage
